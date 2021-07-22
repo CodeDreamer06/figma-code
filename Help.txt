@@ -1,0 +1,8 @@
+Help
+
+Current Flow of the program:
+Start Chrome
+Download all the Fonts
+Finding Colors and Text Styles (only names, values not found yet)
+Create HTML Template
+Create CSS Template

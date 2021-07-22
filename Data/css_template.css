@@ -1,0 +1,15 @@
+:root {
+[variables]
+}
+
+@font-face {
+	font-family: [font];
+	src: url(fonts/[font-url]);
+}
+
+body {
+	background: var(--background);
+	font-size: 62.5%;
+	font-family: [font];
+	margin: 0;
+}
