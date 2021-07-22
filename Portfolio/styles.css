@@ -1,0 +1,17 @@
+:root {
+	--color-background: rgba(248, 248, 255, 1);
+	--color-test: rgba(179, 98, 217, 0.4);
+	--color-testica: rgba(40, 56, 115, 1);
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url(fonts/Inter);
+}
+
+body {
+	background: var(--background);
+	font-size: 62.5%;
+	font-family: 'Inter';
+	margin: 0;
+}

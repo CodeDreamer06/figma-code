@@ -7,9 +7,8 @@ def create_css_template(title, colors, fonts):
 
 	with open(f'{title}/styles.css', "w") as css:
 		# Set color variables
-		css_color_variables = [color.split('color-')[1] for color in colors]
 		css_color_values = [colors.get(color) for color in colors]
-		css_colors = [f'\t--{variable}: {value};' for variable, value in zip(css_color_variables, css_color_values)]
+		css_colors = [f'\t--{variable}: {value};' for variable, value in zip(colors, css_color_values)]
 		css_template = [(css_template[count].replace('[variables]', '\n'.join(css_colors))) for count, line in enumerate(css_template)]
 		# Set Font Faces
 		font_names = listdir(f'{title}/fonts/')
