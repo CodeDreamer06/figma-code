@@ -6,7 +6,7 @@
 
 @font-face {
 	font-family: 'Inter';
-	src: url(fonts/Inter);
+	src: url(fonts/Inter.ttf);
 }
 
 body {
@@ -14,4 +14,27 @@ body {
 	font-size: 62.5%;
 	font-family: 'Inter';
 	margin: 0;
+}
+
+
+#nav {
+	display: flex;
+	justify-content: center;
+	font-weight: normal;
+	margin: 0;
+}
+
+li {
+	list-style: none;
+}
+
+#nav li {
+	margin-top: 30px;
+}
+
+.nav-item a {
+	text-decoration: none;
+	font-size: 2rem;
+	color: black;
+	margin-right: 5rem;
 }

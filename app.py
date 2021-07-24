@@ -1,7 +1,7 @@
 from selenium import webdriver
-from bs4 import BeautifulSoup
-from time import sleep
-from general import init, create_folder, log
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+from general import init, wait, create_folder, log
 import fontFinder
 import htmlCreator, cssCreator
 
@@ -9,8 +9,8 @@ import htmlCreator, cssCreator
 options = init()
 driver = webdriver.Chrome(executable_path='chromedriver', options=options)
 driver.get('https://www.figma.com/file/2LwEexu4O1HaYEdl5wqMYv/Portfolio?node-id=6%3A3')
+actions = ActionChains(driver)
 log('Web Page Loaded', 'cyan')
-
 project_name = driver.title.split('–')[0].strip()
 
 with open("global_variables.txt", "w") as file:
@@ -20,18 +20,17 @@ with open("global_variables.txt", "w") as file:
 text_styles = []
 unknown = []
 
-sleep(16)
-soup = BeautifulSoup(driver.page_source, "html.parser")
+wait(driver)
 
 def find_variables():
 	color_keys = []
-	for element in soup(class_="styles--name--RhNAx"):
-		if 'color' in element.getText():
-			color_keys.append(element.getText())
-		elif 'text' in element.getText():
-			text_styles.append(element.getText())
+	for element in driver.find_elements_by_css_selector('p.styles--name--RhNAx'):
+		if 'color' in element.text:
+			color_keys.append(element.text)
+		elif 'text' in element.text:
+			text_styles.append(element.text)
 		else:
-			unknown.append(element.getText())
+			unknown.append(element.text)
 
 	log('Found ' + str(len(color_keys)) + ' Colors', 'green')
 	log('Found ' + str(len(text_styles)) + ' Text Styles', 'green')
@@ -39,9 +38,9 @@ def find_variables():
 		print('Unkown variables: ', unknown)
 
 	color_values = []
-	for element in soup.find_all("svg", class_="style_icon--fillPositionedContainer--2CRE_"):
-		if element.circle["fill"] != "none":
-			color_values.append(element.circle["fill"])
+	for element in driver.find_elements_by_css_selector("div.style_icon--styleIcon--3-PzQ.styles--thumb--19_d9.style_icon--fillIcon--2kZ-_ > div > div > div > svg > circle"):
+		if element.get_attribute("fill") != "none":
+			color_values.append(element.get_attribute("fill"))
 
 	return dict(zip(color_keys, color_values))
 
@@ -51,8 +50,16 @@ fontFinder.find_fonts(driver.page_source)
 log('Finding Variables...', 'cyan')
 colors = find_variables()
 
+# Reopening with the main frame selected
+driver.get('https://www.figma.com/file/2LwEexu4O1HaYEdl5wqMYv/Portfolio?node-id=6%3A4')
+wait(driver)
+
+actions.send_keys(Keys.ENTER).perform()
+actions.send_keys(Keys.ENTER).perform()
+
 log('Creating html template', 'cyan')
-htmlCreator.create_html_template(project_name)
+sidebar_elements = driver.find_elements_by_css_selector('span.object_row--rowText--2tEqb.ellipsis--ellipsis--1RWY6')
+htmlCreator.create_html_template(project_name, sidebar_elements)
 
 log('Creating CSS template', 'cyan')
 cssCreator.create_css_template(project_name, colors, None)
