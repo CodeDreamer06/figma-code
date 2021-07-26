@@ -53,9 +53,9 @@ def create_css_template(title, colors, fonts):
 			if '/*[variables]*/' in line:
 				css_template[count] = current_line.replace('/*[variables]*/', '\n'.join(css_colors))
 			if '/*[font]*/' in line:
-				css_template[count] = css_template[count].replace('/*[font]*/', f'\'{font}\'')
+				css_template[count] = current_line.replace('/*[font]*/', f'\'{font}\'')
 			if '/*[font-url]*/' in line:
-				css_template[count] = css_template[count].replace('/*[font-url]*/', font + '.ttf')
+				css_template[count] = current_line.replace('/*[font-url]*/', font + '.ttf')
 			if '/*[Navbar]*/' in line:
-				css_template[count] = css_template[count].replace('/*[Navbar]*/', navbar_html)
+				css_template[count] = current_line.replace('/*[Navbar]*/', navbar_html)
 		css.writelines(css_template)

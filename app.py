@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-from general import init, wait, create_folder, log
+from general import init, wait, create_folder, log, find_variables
 import fontFinder
 import htmlCreator, cssCreator
 
@@ -17,38 +17,13 @@ with open("global_variables.txt", "w") as file:
 	file.write(project_name)
 	create_folder(project_name)
 
-text_styles = []
-unknown = []
-
 wait(driver)
-
-def find_variables():
-	color_keys = []
-	for element in driver.find_elements_by_css_selector('p.styles--name--RhNAx'):
-		if 'color' in element.text:
-			color_keys.append(element.text)
-		elif 'text' in element.text:
-			text_styles.append(element.text)
-		else:
-			unknown.append(element.text)
-
-	log('Found ' + str(len(color_keys)) + ' Colors', 'green')
-	log('Found ' + str(len(text_styles)) + ' Text Styles', 'green')
-	if unknown:
-		print('Unkown variables: ', unknown)
-
-	color_values = []
-	for element in driver.find_elements_by_css_selector("div.style_icon--styleIcon--3-PzQ.styles--thumb--19_d9.style_icon--fillIcon--2kZ-_ > div > div > div > svg > circle"):
-		if element.get_attribute("fill") != "none":
-			color_values.append(element.get_attribute("fill"))
-
-	return dict(zip(color_keys, color_values))
 
 log('Finding Fonts...', 'cyan')
 fontFinder.find_fonts(driver.page_source)
 
 log('Finding Variables...', 'cyan')
-colors = find_variables()
+colors = find_variables(driver)
 
 # Reopening with the main frame selected
 driver.get('https://www.figma.com/file/2LwEexu4O1HaYEdl5wqMYv/Portfolio?node-id=6%3A4')
